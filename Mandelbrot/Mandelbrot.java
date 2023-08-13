@@ -1,10 +1,13 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 
 public class Mandelbrot extends JPanel {
     private double zoom = 2.0;
+    private double dx = 0, dy = 0;
     private final int WIDTH = 1200, HEIGHT = 700;
 
     public Mandelbrot() {
@@ -24,6 +27,23 @@ public class Mandelbrot extends JPanel {
                 zoom /= 1.1; // Zoom out by decreasing zoom factor
             }
         });
+
+        setFocusable(true);
+        requestFocusInWindow();
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_A) {
+                    dx -= 2 / zoom; // Move visualization left
+                } else if (e.getKeyCode() == KeyEvent.VK_D) {
+                    dx += 2 / zoom; // Move visualization right
+                } else if (e.getKeyCode() == KeyEvent.VK_W) {
+                    dy -= 2 / zoom; // Move visualization up
+                } else if (e.getKeyCode() == KeyEvent.VK_S) {
+                    dy += 2 / zoom; // Move visualization down
+                }
+            }
+        });
     }
 
         protected void paintComponent(Graphics g) {
@@ -34,8 +54,8 @@ public class Mandelbrot extends JPanel {
             for (int x = 0; x < WIDTH; x++) {
                 for (int y = 0; y < HEIGHT; y++) {
                     // this is worst part 
-                    double a = (double) ((x + (0 / 1 / zoom)) - ((WIDTH / 2d) / 1)) / (double) (WIDTH / zoom / 1 / 1.777);
-                    double b = (double) ((y + (0 / 1 / zoom)) - ((HEIGHT / 2d) / 1)) / (double) (HEIGHT / zoom / 1);
+                    double a = (double) ((x + (dx / 1 / zoom)) - ((WIDTH / 2d) / 1)) / (double) (WIDTH / zoom / 1 / 1.777);
+                    double b = (double) ((y + (dy / 1 / zoom)) - ((HEIGHT / 2d) / 1)) / (double) (HEIGHT / zoom / 1);
 
                     Complex c = new Complex(a, b);
                     Complex z = new Complex(0, 0);
